@@ -18,25 +18,21 @@
 function isAllTrue(arr, fn) {
   let result = true;
 
-  try {
-    if (!Array.isArray(arr) || !arr.length) {
-      throw new Error('empty array');
-    } else if (typeof fn !== 'function') {
-      throw new Error('fn is not a function');
-    }
-
-    for (let i = 0; i < arr.length; i++) {
-      const element = arr[i];
-
-      if (!fn(element)) {
-        result = false;
-      }
-    }
-
-    return result;
-  } catch (e) {
-    console.log(e.message);
+  if (!Array.isArray(arr) || !arr.length) {
+    throw 'empty array';
+  } else if (typeof fn !== 'function') {
+    throw 'fn is not a function';
   }
+
+  for (let i = 0; i < arr.length; i++) {
+    const element = arr[i];
+
+    if (!fn(element)) {
+      result = false;
+    }
+  }
+
+  return result;
 }
 
 // isAllTrue({}, () => {});
@@ -60,25 +56,21 @@ isSomeTrue должна вернуть true только если fn верну�
 function isSomeTrue(arr, fn) {
   let result = false;
 
-  try {
-    if (!Array.isArray(arr) || !arr.length) {
-      throw new Error('empty array');
-    } else if (typeof fn !== 'function') {
-      throw new Error('fn is not a function');
-    }
-
-    for (let i = 0; i < arr.length; i++) {
-      const element = arr[i];
-
-      if (fn(element)) {
-        result = true;
-      }
-    }
-
-    return result;
-  } catch (e) {
-    console.log(e.message);
+  if (!Array.isArray(arr) || !arr.length) {
+    throw 'empty array';
+  } else if (typeof fn !== 'function') {
+    throw 'fn is not a function';
   }
+
+  for (let i = 0; i < arr.length; i++) {
+    const element = arr[i];
+
+    if (fn(element)) {
+      result = true;
+    }
+  }
+
+  return result;
 }
 
 /*
@@ -93,27 +85,22 @@ returnBadArguments должна поочередно запустить fn дл�
 function returnBadArguments(fn, ...arr) {
   const errorsArr = [];
 
-  try {
-    if (typeof fn !== 'function') {
-      throw new Error('fn is not a function');
-    }
-
-    for (let i = 0; i < arr.length; i++) {
-      const element = arr[i];
-
-      try {
-        fn(element);
-      } catch (e) {
-        errorsArr.push(element);
-        console.log(`error for ${element}`);
-      }
-    }
-
-    return errorsArr;
-  } catch (e) {
-    console.log(e.message);
-    return console.log(e.message);
+  if (typeof fn !== 'function') {
+    throw 'fn is not a function';
   }
+
+  for (let i = 0; i < arr.length; i++) {
+    const element = arr[i];
+
+    try {
+      fn(element);
+    } catch (e) {
+      errorsArr.push(element);
+      console.log(`error for ${element}`);
+    }
+  }
+
+  return errorsArr;
 }
 
 // const evenNumbers = [2, 4, 6];
@@ -147,12 +134,8 @@ function returnBadArguments(fn, ...arr) {
     console.log(calc.div(2, 0)); // выбросит исключение, потому что один из аргументов равен 0
 */
 function calculator(number = 0) {
-  try {
-    if (typeof number !== 'number') {
-      throw new Error('number is not a number');
-    }
-  } catch (e) {
-    console.log(e);
+  if (typeof number !== 'number') {
+    throw 'number is not a number';
   }
 
   return {
@@ -184,15 +167,11 @@ function calculator(number = 0) {
       for (let i = 0; i < numbers.length; i++) {
         const element = numbers[i];
 
-        try {
-          if (element === 0) {
-            throw new Error('division by 0');
-          }
-
-          div /= element;
-        } catch (e) {
-          console.log(e);
+        if (element === 0) {
+          throw 'division by 0';
         }
+
+        div /= element;
       }
 
       return div;
@@ -211,8 +190,8 @@ function calculator(number = 0) {
   };
 }
 
-const calc = calculator(10);
-console.log(calc.div(1, 2, 0, 3));
+// const calc = calculator(10);
+// console.log(calc.div(1, 2, 0, 3));
 
 /* При решении задач, постарайтесь использовать отладчик */
 
