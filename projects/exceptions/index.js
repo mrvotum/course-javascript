@@ -18,11 +18,11 @@
 function isAllTrue(arr, fn) {
   let result = true;
 
-  if (!Array.isArray(arr) || !arr.length) {
-    throw 'empty array';
-  } else if (typeof fn !== 'function') {
+  if (typeof fn !== 'function') {
     throw 'fn is not a function';
-  }
+  } else if (!Array.isArray(arr) || !arr.length) {
+    throw 'empty array';
+  } 
 
   for (let i = 0; i < arr.length; i++) {
     const element = arr[i];
@@ -56,10 +56,10 @@ isSomeTrue должна вернуть true только если fn верну�
 function isSomeTrue(arr, fn) {
   let result = false;
 
-  if (!Array.isArray(arr) || !arr.length) {
-    throw 'empty array';
-  } else if (typeof fn !== 'function') {
+  if (typeof fn !== 'function') {
     throw 'fn is not a function';
+  } else if (!Array.isArray(arr) || !arr.length) {
+    throw 'empty array';
   }
 
   for (let i = 0; i < arr.length; i++) {
@@ -96,7 +96,6 @@ function returnBadArguments(fn, ...arr) {
       fn(element);
     } catch (e) {
       errorsArr.push(element);
-      console.log(`error for ${element}`);
     }
   }
 
