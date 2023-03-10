@@ -22,7 +22,7 @@ function isAllTrue(arr, fn) {
     throw 'fn is not a function';
   } else if (!Array.isArray(arr) || !arr.length) {
     throw 'empty array';
-  } 
+  }
 
   for (let i = 0; i < arr.length; i++) {
     const element = arr[i];
