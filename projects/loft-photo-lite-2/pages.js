@@ -8,7 +8,7 @@ const openPage = (showPage) => {
   // Удаляем точку
   const showClass = pagesMap[showPage].slice(1);
 
-  pages.forEach(element => {
+  pages.forEach((element) => {
     if (element.classList.contains(showClass)) {
       element.classList.remove('hidden');
     } else if (!element.classList.contains('hidden')) {
@@ -25,7 +25,6 @@ pages.openPage = openPage;
 // pages.openPage('profile'); // сделать видимым элемент с классом page-profile, а page-main скрыть
 // pages.openPage('login'); // сделать видимым элемент с классом page-login, а page-profile скрыть
 
-
 export default {
-  openPage,
+  pages,
 };

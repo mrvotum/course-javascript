@@ -2,8 +2,16 @@ import pages from './pages';
 import('./styles.css');
 
 const pageNames = ['login', 'main', 'profile'];
-console.log(pageNames);
+
+const getRandomElement = (arr) => {
+  const randomNum = Math.floor(Math.random() * arr.length);
+
+  return arr[randomNum];
+};
+
 
 document.addEventListener('click', () => {
-  pages.openPage('main');
+  const randomPageName = getRandomElement(pageNames);
+  
+  pages.openPage(randomPageName);
 });
