@@ -52,27 +52,17 @@ function prepend(what, where) {
  */
 function findAllPSiblings(where) {
   const correctIndex = [];
-  const mainEl = document.createElement('div');
-  const resulEllsArr = [];
 
   // Находим все подходящие узлы
   for (const child of where.childNodes) {
     if (child.nextSibling && child.nextSibling.nodeName === 'P') {
-      correctIndex.push(child.nodeName);
+      correctIndex.push(child);
     }
   }
 
-  correctIndex.forEach((el) => {
-    const newEl = document.createElement(el);
-    mainEl.appendChild(newEl);
-  });
-
-  for (const child of mainEl.childNodes) {
-    resulEllsArr.push(child);
-  }
-
-  return resulEllsArr;
+  return correctIndex;
 }
+
 
 /*
  Задание 4:
