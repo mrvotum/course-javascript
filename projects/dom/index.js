@@ -154,7 +154,7 @@ function collectDOMStat(root) {
       }
 
       if (child.className) {
-        const classes = child.className.split(' ');
+        const classes = child.classList;
 
         classes.forEach((element) => {
           if (!stat.classes[element]) {
