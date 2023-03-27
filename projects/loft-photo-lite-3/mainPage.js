@@ -1,58 +1,36 @@
 import model from './model';
 
-// const nav = document.querySelector('.nav');
-
-// nav.addEventListener('click', (e) => {
-//   e.preventDefault();
-//   let goTo = 1;
-
-//   const imgEl = document.querySelector('#img-el');
-
-//   if (imgEl) {
-//     if (e.target.classList.contains('nav_prev')) {
-
-//     } else if (e.target.classList.contains('nav_next')) {
-
-//     }
-//   }
-// });
-
 export default {
   async getNextPhoto() {
-    const { friend, id, photos } = await model.getNextPhoto();
+    const { friend, id, url } = await model.getNextPhoto();
 
-    this.setFriendAndPhoto(friend, id, photos);
+    this.setFriendAndPhoto(friend, id, url);
   },
 
-  setFriendAndPhoto(friend, id, photos) {
-    const imgContainer = document.querySelector('.component-photo');
+  setFriendAndPhoto(friend, id, url) {
+    const photoComp = document.querySelector('.component-photo');
+    const headerPhotoComp = document.querySelector('.component-header-photo');
+    const headerNamePComp = document.querySelector('.component-header-name');
 
-    let startPhotoIndex = 0;
+    headerPhotoComp.style.backgroundImage = `url('${friend.photo_50}')`;
+    headerNamePComp.innerText = `${friend.first_name ?? ''} ${friend.last_name ?? ''}`;
+    photoComp.style.backgroundImage = `url('${url}}')`;
+  },
 
-    const imgEl = document.createElement('img');
+  handleEvents() {
+    let startForm;
 
-    try {
-      const randomPhoto = photos[startPhotoIndex].sizes[4].url;
-      imgEl.src = randomPhoto;
-    } catch (error) {
-      throw new Error(`У пользователя ${friend} нет фотографий`);
-    }
-
-    imgEl.alt = `Фото ${friend}`;
-    imgEl.id = 'img-el';
-
-    imgEl.addEventListener('click', () => {
-      startPhotoIndex = startPhotoIndex + 1;
-
-      if (photos[startPhotoIndex]) {
-        imgEl.src = photos[startPhotoIndex].sizes[4].url;
-      } else {
-        startPhotoIndex = 0;
-      }
+    document.querySelector('.component-photo').addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startForm = {y: e.changedTouches[0].pageY};
     });
 
-    imgContainer.appendChild(imgEl);
-  },
+    document.querySelector('.component-photo').addEventListener('touchend', async (e) => {
+      const direction = e.changedTouches[0].pageY - startForm.y;
 
-  handleEvents() {},
+      if (direction < 0) {
+        await this.getNextPhoto();
+      }
+    });
+  },
 };
