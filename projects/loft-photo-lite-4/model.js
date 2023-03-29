@@ -1,6 +1,6 @@
 // const PERM_FRIENDS = 2;
 // const PERM_PHOTOS = 4;
-// const APP_ID = 5350105;
+const APP_ID = 51596263;
 
 // export default {
 //   getRandomElement(array) {},
@@ -59,10 +59,20 @@ export default {
     const size = photo.sizes.find((size) => size.width >= 360);
 
     if (!size) {
+      // console.log('картинка меньше 360px');
+
       return photo.sizes.reduce((biggest, current) => {
-        if (current.width > biggest.width) {
+        // console.log(biggest);
+        // console.log(current);
+        // console.log('------');
+
+        if (current.width > biggest.width || current.width === biggest.width) {
           return current;
         }
+
+        // console.log('=============');
+        // console.log(biggest);
+        // console.log('=============');
 
         return biggest;
       }, photo.sizes[0]);
@@ -73,7 +83,7 @@ export default {
 
   async login() {
     VK.init({
-      apiId: 51588434,
+      apiId: APP_ID,
     });
 
     return new Promise((resolve, reject) => {
@@ -87,6 +97,20 @@ export default {
     });
   },
 
+  // Работает, но как-то странно
+  async logout() {
+    return new Promise((resolve, reject) => {
+      // VK.Auth.revokeGrants((data) => {
+      VK.Auth.logout((data) => {
+        if (data.session) {
+          resolve(console.log('Выйшли из аккаунта'));
+        } else {
+          reject(new Error('Не удалось выйти'));
+        }
+      });
+    });
+  },
+
   async init() {
     this.photoCache = {};
     // this.friends = await callApi('friends.get', { fields: 'photo_50' });
@@ -95,6 +119,7 @@ export default {
 
     const componentFooterComp = document.querySelector('.component-footer-photo');
     componentFooterComp.style.backgroundImage = `url('${this.authUser.photo_50}')`;
+    componentFooterComp.setAttribute('id', this.authUser.id);
   },
 
   async getPhotos(owner) {
@@ -105,6 +130,9 @@ export default {
 
     // const photosArr = await callApi('photos.getAll', {owner_id: owner});
     const photosArr = await callApi('photos.get', params);
+
+    console.log('photosArr');
+    console.log(photosArr);
 
     return photosArr.items;
   },

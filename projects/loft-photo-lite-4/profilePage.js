@@ -9,26 +9,39 @@ export default {
     const imgEl = document.createElement('div');
 
     imgEl.friendId = id;
-    imgEl.style.backgroundImage = `url('${url}}')`;
+    imgEl.style.backgroundImage = `url('${url}')`;
 
     imgEl.classList.add('component-user-photo');
+
+    imgEl.addEventListener('click', () => {
+      pages.openPage('main');
+      document.querySelector('.component-photo').style.backgroundImage = `url('${url}')`;
+    });
 
     return imgEl;
   },
 
-  addFriendInfo(id) {
+  async addFriendInfo(id) {
     const userInfoPhotoComp = document.querySelector('.component-user-info-photo');
     const userInfoNameComp = document.querySelector('.component-user-info-name');
 
-    // Получаем друга
-    const friend = model.friends.items.filter((friend) => {
-      if (friend.id == id) {
-        return friend;
-      }
-    });
+    // Получаем друга, если есть id
+    // Если id нет, значит получаем значения пользователя
+    let friend = null;
+    if (id) {
+      friend = model.friends.items.filter((friend) => {
+        if (friend.id == id) {
+          return friend;
+        }
+      });
 
-    userInfoPhotoComp.style.backgroundImage = `url('${friend[0].photo_50}}')`;
-    userInfoNameComp.textContent = `${friend[0].first_name} ${friend[0].last_name}`;
+      friend = friend[0];
+    } else {
+      friend = await model.getUsers();
+    }
+
+    userInfoPhotoComp.style.backgroundImage = `url('${friend.photo_50}}')`;
+    userInfoNameComp.textContent = `${friend.first_name} ${friend.last_name}`;
   },
 
   handleEvents() {
@@ -64,5 +77,45 @@ export default {
         });
       }
     });
+
+    document.querySelector('.page-profile-back').addEventListener('click', async () => {
+      pages.openPage('main');
+    });
+
+    document.querySelector('.page-profile-exit').addEventListener('click', async () => {
+      //   await model.logout();
+      pages.openPage('login');
+    });
+
+    // Клик на иконку залогиненного пользователя
+    document
+      .querySelector('.component-footer-photo')
+      .addEventListener('click', async (e) => {
+        const id = e.target.id;
+        pages.openPage('profile');
+
+        // устанавливаем аватарку и фио
+        this.addFriendInfo();
+
+        // Получаем фотографии
+        this.photos = await model.getPhotos(id);
+
+        this.photos = this.photos.map((photo) => {
+          return model.findSize(photo);
+        });
+
+        console.log('this.photos');
+        console.log(this.photos);
+
+        // Чистим блок с фотографиями
+        userPhotosComp.textContent = '';
+
+        // Добавляем фотографии
+        this.photos.forEach((photo) => {
+          const imgEl = this.createImgEl(id, photo.url);
+
+          userPhotosComp.appendChild(imgEl);
+        });
+      });
   },
 };
