@@ -1,5 +1,5 @@
-// const PERM_FRIENDS = 2;
-// const PERM_PHOTOS = 4;
+const PERM_FRIENDS = 2;
+const PERM_PHOTOS = 4;
 const APP_ID = 51596263;
 
 // export default {
@@ -59,20 +59,10 @@ export default {
     const size = photo.sizes.find((size) => size.width >= 360);
 
     if (!size) {
-      // console.log('картинка меньше 360px');
-
       return photo.sizes.reduce((biggest, current) => {
-        // console.log(biggest);
-        // console.log(current);
-        // console.log('------');
-
         if (current.width > biggest.width || current.width === biggest.width) {
           return current;
         }
-
-        // console.log('=============');
-        // console.log(biggest);
-        // console.log('=============');
 
         return biggest;
       }, photo.sizes[0]);
@@ -93,22 +83,12 @@ export default {
         } else {
           reject(new Error('Не удалось авторизоваться'));
         }
-      }, 2);
+      }, PERM_FRIENDS | PERM_PHOTOS);
     });
   },
 
-  // Работает, но как-то странно
   async logout() {
-    return new Promise((resolve, reject) => {
-      // VK.Auth.revokeGrants((data) => {
-      VK.Auth.logout((data) => {
-        if (data.session) {
-          resolve(console.log('Выйшли из аккаунта'));
-        } else {
-          reject(new Error('Не удалось выйти'));
-        }
-      });
-    });
+    return new Promise((resolve) => VK.Auth.revokeGrants(resolve));
   },
 
   async init() {
@@ -125,14 +105,12 @@ export default {
   async getPhotos(owner) {
     const params = {
       owner_id: owner,
-      album_id: 'profile',
+      // album_id: 'profile',
     };
 
     // const photosArr = await callApi('photos.getAll', {owner_id: owner});
-    const photosArr = await callApi('photos.get', params);
-
-    console.log('photosArr');
-    console.log(photosArr);
+    const photosArr = await callApi('photos.getAll', params);
+    // const photosArr = await callApi('photos.get', params);
 
     return photosArr.items;
   },
@@ -155,11 +133,15 @@ export default {
     return await callApi('friends.get', { fields: 'photo_50' });
   },
 
-  async getUsers(id) {
+  async getUsers(ids) {
     const params = {
       name_case: 'nom',
       fields: ['photo_50'],
     };
+
+    if (ids) {
+      params.user_ids = ids;
+    }
 
     const userInfo = await callApi('users.get', params);
 
