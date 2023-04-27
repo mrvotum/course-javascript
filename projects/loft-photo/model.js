@@ -110,8 +110,16 @@ export default {
     return photos[0];
   },
 
-  async getFriends() {
-    return await callApi('friends.get', { fields: 'photo_50' });
+  async getFriends(id) {
+    const params = {
+      fields: ['photo_50', 'photo_100']
+    };
+
+    if (id != null) {
+      params.user_id = id;
+    }
+
+    return await callApi('friends.get', params);
   },
 
   async getUsers(ids) {
